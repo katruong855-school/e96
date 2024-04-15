@@ -7,13 +7,17 @@ public class PlayerInput : MonoBehaviour
 {
     private Rigidbody rb;
     bool isGrounded = false; 
+    bool isDashing = false;
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpHeight = 5f;
 
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashTime = 0.5f; //in seconds
+
     private Vector2 direction = Vector2.zero;
     void Start()
-    {
+    { 
         rb = GetComponent<Rigidbody>();
     }
     
@@ -21,7 +25,7 @@ public class PlayerInput : MonoBehaviour
     {
 
         Vector2 direction = value.Get<Vector2>(); //need parentheses! its a method :D
-        Debug.Log(direction);
+        //Debug.Log(direction);
 
         this.direction = direction;
 
@@ -67,4 +71,30 @@ public class PlayerInput : MonoBehaviour
             isGrounded = false;
         }
     }
+
+
+     void OnDash()
+    {
+        Debug.Log("Start dash");
+ 
+        if(isDashing == false){
+            isDashing = true;
+            StartCoroutine(Dash());
+        }
+        
+
+    }
+
+    private IEnumerator Dash()
+    {
+        speed += dashSpeed;
+        Debug.Log("Speed up");
+        yield return new WaitForSeconds(dashTime);
+        speed -= dashSpeed;
+        Debug.Log("Is finished dashing");
+        isDashing = false;
+        
+    }
 }
+
+   
